@@ -1,6 +1,37 @@
 <metal:main use-macro="load: layout.pt" >
   <div class="col-md-9" metal:fill-slot="content">
     <article >
+      <div tal:repeat="manager managers">
+	<h2>${manager['name'].title()}</h2>
+	<table class="table table-bordered table-striped">
+	  <thead>
+	    <tr>
+	      <th>
+	      number
+	      </th>
+	      <th>
+		status
+	      </th>
+	      <td>
+		action
+	      </td>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr tal:repeat="num xrange(int(manager['number']))">
+	      <td>
+		${num}
+	      </td>
+	      <td>
+		Unknown
+	      </td>
+	      <td>
+		<a class='btn btn-success' href="${}">Start !</a>
+	      </td>
+	    </tr>
+	  </tbody>
+	</table>
+      </div>
     </article>
   </div>
 </metal:main>

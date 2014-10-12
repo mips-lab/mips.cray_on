@@ -4,7 +4,20 @@ from pyramid.security import remember
 
 @view_config(route_name='crays', renderer='templates/crays.pt', request_method='GET', permission='authenticated')
 def crays(request):
-    return {'project': 'mips.cray_on'}
+    settings = request.registry.settings
+
+    cray_managers = [{'name': manager} for manager in settings['cray.manager'].strip().split() if manager]
+
+    for manager in cray_managers:
+
+        number = settings.get('cray.'+manager['name']+'.number', None)
+
+        if not number:
+            pass
+            # log warning
+        manager.update({'number': number})
+
+    return {'managers': cray_managers}
 
 
 @view_config(route_name='home', renderer='templates/home.pt', request_method='GET', permission='view')
