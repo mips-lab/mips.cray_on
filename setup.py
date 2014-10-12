@@ -13,6 +13,10 @@ requires = [
     'pyramid_chameleon',
     'pyramid_debugtoolbar',
     'waitress',
+    'pyramid_fanstatic',
+    'rebecca.fanstatic',
+    'js.bootstrap',
+    'css.fontawesome',
     ]
 
 setup(name='mips.cray_on',

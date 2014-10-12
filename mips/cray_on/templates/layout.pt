@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <head>
+    <title metal:define-slot='title'>Crays On !</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+  </head>
+  <body>
+
+    <article class="container-fluid">
+      <div class="container">
+	<tal:message condition="request.session.peek_flash()">
+	  <div class="alert"
+	       tal:repeat="message request.session.pop_flash()">
+	    <button type="button" class="close" data-dismiss="alert">&times;</button>
+	    <tal:alert replace="structure message" />
+	  </div>
+	</tal:message>
+      </div>
+
+      <div class="row">
+	<nav class="col-md-2" tal:condition="'login' in request.session">
+	  <ul class="nav nav-tabs nav-stacked">
+	    <li>
+	      <a href="${request.route_path('home')}" i18n:translate='' >Home</a>
+	    </li>
+	  </ul>
+	  <ul class="nav nav-tabs nav-stacked">
+	    <li>
+	      <a href="${request.route_path('logout')}" i18n:translate='' >Logout</a>
+	    </li>
+	  </ul>
+	</nav>
+
+	<div id="content" metal:define-slot="content"></div>
+
+      </div>
+
+    </article>
+  </body>
+</html>

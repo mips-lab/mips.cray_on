@@ -1,0 +1,6 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="col-md-9" metal:fill-slot="content">
+    <article >
+    </article>
+  </div>
+</metal:main>
