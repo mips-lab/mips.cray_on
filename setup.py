@@ -32,11 +32,12 @@ setup(name='mips.cray_on',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
+      namespace = ['mips'],
       install_requires=requires,
       tests_require=requires,
-      test_suite="mipscray_on",
+      test_suite="mips.cray_on",
       entry_points="""\
       [paste.app_factory]
-      main = mipscray_on:main
+      main = mips.cray_on:main
       """,
       )
