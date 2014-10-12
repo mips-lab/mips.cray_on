@@ -42,6 +42,16 @@ def login_submit(request):
         return HTTPFound(location=request.route_path('home'))
 
 
+@view_config(route_name='switch_on', request_method='POST', permission='authenticated', check_csrf=True, renderer='json')
+def switch_on(request):
+
+    return
+
+
+
+
+
+
 
 
 
