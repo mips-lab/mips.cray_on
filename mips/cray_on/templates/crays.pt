@@ -18,7 +18,7 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr tal:repeat="num xrange(int(manager['number']))">
+	    <tr tal:repeat="num xrange(manager['number'])">
 	      <td>
 		${num}
 	      </td>

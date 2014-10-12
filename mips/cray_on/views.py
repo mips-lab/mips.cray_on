@@ -10,7 +10,7 @@ def crays(request):
 
     for manager in cray_managers:
 
-        number = settings.get('cray.'+manager['name']+'.number', None)
+        number = int(settings.get('cray.'+manager['name']+'.number', 0))
 
         if not number:
             pass
