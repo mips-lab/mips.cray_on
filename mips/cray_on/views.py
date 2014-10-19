@@ -1,10 +1,30 @@
 import socket
+import urllib2
+
+import datetime
+import pytz
+
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember
 
+import icalendar
+
+
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# todo cache docpile
+def readCalendar(url):
+    req = urllib2.urlopen(url)
+    return icalendar.Calendar.from_ical(req.read())
+
+
+def isMipsOpen(calendar, now):
+    return any([checkEvent(event, now) for event in calendar.subcomponents])
+
+def checkEvent(event, now):
+    return event['DTSTART'].dt <= now and event['DTEND'].dt >= now
 
 @view_config(route_name='crays', renderer='templates/crays.pt', request_method='GET', permission='authenticated')
 def crays(request):
@@ -48,14 +68,26 @@ def login_submit(request):
 
 @view_config(route_name='switch_on', request_method='POST', permission='authenticated', check_csrf=True, renderer='json')
 def switch_on(request):
-    manager = request.settings.get('%s.ip' % request.matchdict['manager'])
-    if not manager:
+
+    now = pytz.utc.localize(datetime.datetime.utcnow())
+    calendar = readCalendar(request.registry.settings['calendar_url'])
+
+    if not isMipsOpen(calendar, now):
+
+
+        manager = request.registry.settings.get('cray.%s.ip' % request.matchdict['manager'])
+        if not manager:
+            pass
+
+        port = request.registry.settings.get('cray.%s.port' % request.matchdict['manager'], 9496)
+
+        print "lame%s" % request.matchdict['blade']
+        print manager
+        # todo proper logs
+        sock.sendto("lame%s" % request.matchdict['blade'], (manager, int(port)))
+
+        # todo flash
+    else:
         pass
-
-    port = request.settings.get('%s.port' % request.matchdict['manager'], 9496)
-    # todo check ICS
-
-    sock.sendto("lame%s" % request.matchdict['blade'], (int(port), manager))
-
-    # todo flash
-    return
+        # todo flash
+    return HTTPFound(location=request.route_path('crays'))

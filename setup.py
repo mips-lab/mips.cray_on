@@ -17,6 +17,7 @@ requires = [
     'rebecca.fanstatic',
     'js.bootstrap',
     'css.fontawesome',
+    'icalendar'
     ]
 
 setup(name='mips.cray_on',
