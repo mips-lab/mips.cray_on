@@ -34,7 +34,7 @@ def main(global_config, **settings):
     config.add_route('login_submit', '/login_submit')
     config.add_route('logout', '/logout')
     config.add_route('crays', '/crays')
-    config.add_route('switch_on', '/cray/{manager}/{number}')
+    config.add_route('switch_on', '/cray/{manager}/{blade}')
 
     config.scan()
 

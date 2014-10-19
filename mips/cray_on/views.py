@@ -1,6 +1,10 @@
+import socket
+
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 @view_config(route_name='crays', renderer='templates/crays.pt', request_method='GET', permission='authenticated')
 def crays(request):
@@ -44,19 +48,14 @@ def login_submit(request):
 
 @view_config(route_name='switch_on', request_method='POST', permission='authenticated', check_csrf=True, renderer='json')
 def switch_on(request):
+    manager = request.settings.get('%s.ip' % request.matchdict['manager'])
+    if not manager:
+        pass
 
+    port = request.settings.get('%s.port' % request.matchdict['manager'], 9496)
+    # todo check ICS
+
+    sock.sendto("lame%s" % request.matchdict['blade'], (int(port), manager))
+
+    # todo flash
     return
-
-
-
-
-
-
-
-
-
-
-
-
-
-
