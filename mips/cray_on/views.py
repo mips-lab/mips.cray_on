@@ -13,6 +13,10 @@ import icalendar
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.settimeout(0.1)
+
+STATUS = {'ON' : 'on',
+          'OFF': 'off'}
 
 # todo cache docpile
 def readCalendar(url):
@@ -26,20 +30,33 @@ def isMipsOpen(calendar, now):
 def checkEvent(event, now):
     return event['DTSTART'].dt <= now and event['DTEND'].dt >= now
 
+
+
 @view_config(route_name='crays', renderer='templates/crays.pt', request_method='GET', permission='authenticated')
 def crays(request):
     settings = request.registry.settings
 
-    cray_managers = [{'name': manager} for manager in settings['cray.manager'].strip().split() if manager]
+    cray_managers = [{'name': manager,
+                      'ip' : settings['cray.%s.ip' % manager],
+                      'port' : int(settings['cray.%s.port' % manager]),
+                      'number': int(settings['cray.%s.number' % manager])}
+                      for manager in settings['cray.manager'].strip().split() if manager]
 
     for manager in cray_managers:
+        blades = []
+        for blade in range(1, manager['number'] + 1):
+            sock.sendto('stat%d' % blade, (manager['ip'], manager['port']))
+            try:
+                data, ip = sock.recvfrom(2048)
+            except socket.timeout:
+                print "timeout !"
+                data = 'unknown'
 
-        number = int(settings.get('cray.'+manager['name']+'.number', 0))
+            status = STATUS.get(data, 'unknown')
 
-        if not number:
-            pass
-            # log warning
-        manager.update({'number': number})
+            blades.append({'status': status, 'id': blade})
+
+        manager.update({'blades': blades})
 
     return {'managers': cray_managers}
 

@@ -18,15 +18,17 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	    <tr tal:repeat="num xrange(manager['number'])">
+	    <tr tal:repeat="blade manager['blades']">
 	      <td>
-		${num}
+		${blade['id']}
+	      </td>
+	      <td tal:switch="blade['status']">
+		<span class="label label-success" tal:case="'on'">On</span>
+		<span class="label label-danger" tal:case="'off'">Off</span>
+		<span class="label label-warning" tal:case="'unknown'">Unknown</span>
 	      </td>
 	      <td>
-		Unknown
-	      </td>
-	      <td>
-		<form  action="${request.route_path('switch_on', manager=manager['name'], blade=num)}" method='POST'>
+		<form  action="${request.route_path('switch_on', manager=manager['name'], blade=blade['id'])}" method='POST'>
 		  <input type="hidden" name="csrf_token" value="${request.session.get_csrf_token()}"/>
 		  <input type='submit' class='btn btn-success' value='Start !'/>
 		</form>
