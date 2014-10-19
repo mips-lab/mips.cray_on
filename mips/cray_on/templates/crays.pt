@@ -26,7 +26,7 @@
 		Unknown
 	      </td>
 	      <td>
-		<form  action="${request.route_path('switch_on', manager=manager['name'], number=num)}" method='POST'>
+		<form  action="${request.route_path('switch_on', manager=manager['name'], blade=num)}" method='POST'>
 		  <input type="hidden" name="csrf_token" value="${request.session.get_csrf_token()}"/>
 		  <input type='submit' class='btn btn-success' value='Start !'/>
 		</form>
